@@ -50,4 +50,4 @@ for i, data in enumerate(testdataloader, 0):
     correct_buf.append(correct.item())
 # print('i:%d  loss: %f accuracy: %f' % (i, loss.data.item(), correct / float(32)))
 print("Loss:", np.mean(loss_buf))
-print("Accuracy:", np.sum(correct_buf) * 100 / test_dataset.__len__(), "%")
+print("Accuracy:", np.sum(correct_buf) * 100.0 / test_dataset.__len__(), "%")

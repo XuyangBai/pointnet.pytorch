@@ -122,7 +122,7 @@ for epoch in range(opt.nepoch):
     print('Epoch %d: Train loss: %.2f, Time: %.2f s' % (epoch, np.mean(loss_buf), time.time() - epoch_start_time))
     # every ten epoch: save model & evaluate
 
-    if (1 + epoch) % 10 == 0:
+    if (epoch) % 10 == 0:
         torch.save(classifier.state_dict(), '%s/seg_model_%s_%d.pth' % (opt.outf, opt.class_choice, epoch + 1))
         # evaluate on test set
         loss_buf = []
@@ -138,7 +138,7 @@ for epoch in range(opt.nepoch):
             target = target.view(-1, 1)[:, 0] - 1
             loss = F.nll_loss(pred, target)
             pred_choice = pred.data.max(1)[1]
-            correct = pred_choice.eq(target.data.cpu().sum())
+            correct = pred_choice.eq(target.data).cpu().sum()
 
             # calculate the mIOU
             pred_np = pred_choice.cpu().data.numpy()
@@ -149,6 +149,6 @@ for epoch in range(opt.nepoch):
             loss_buf.append(loss.data.item())
             correct_buf.append(correct.item())
         # print('i:%d  loss: %f accuracy: %f' % (i, loss.data.item(), correct / float(32)))
-        acc = np.sum(correct_buf) * 100 / test_dataset.__len__() / opt.batchSize / ShapeNetDataset.npoints
-        print("Epoch %d: Test loss: %.4f, Accuracy: %.2f\%, IOU: %.2f\%" % (
+        acc = np.sum(correct_buf) * 100 / test_dataset.__len__() / opt.batchSize / 2500
+        print("Epoch %d: Test loss: %.4f Accuracy: %.2f%% IOU: %.2f%%" % (
             epoch, np.mean(loss_buf), acc, np.mean(iou_buf) * 100.0))
