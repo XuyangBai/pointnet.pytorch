@@ -94,6 +94,7 @@ def get_iou(pred_np, target_np):
     return np.mean(shape_ious)
 
 
+best_iou = 0
 for epoch in range(opt.nepoch):
     scheduler.step()
     loss_buf = []
@@ -152,3 +153,6 @@ for epoch in range(opt.nepoch):
         acc = np.sum(correct_buf) * 100 / test_dataset.__len__() / opt.batchSize / 2500
         print("Epoch %d: Test loss: %.4f Accuracy: %.2f%% IOU: %.2f%%" % (
             epoch, np.mean(loss_buf), acc, np.mean(iou_buf) * 100.0))
+        if np.mean(iou_buf) > best_iou:
+            best_iou = np.mean(iou_buf)
+            torch.save(classifier.state_dict(), '%s/seg_model_%s_best.pth' % (opt.outf, opt.class_choice))

@@ -96,7 +96,7 @@ scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=20, gamma=0.5)
 classifier.cuda()
 
 num_batch = len(dataset) / opt.batchSize
-
+best_acc = 0
 for epoch in range(opt.nepoch):
     scheduler.step()
     loss_buf = []
@@ -143,6 +143,9 @@ for epoch in range(opt.nepoch):
         # print('i:%d  loss: %f accuracy: %f' % (i, loss.data.item(), correct / float(32)))
         acc = np.sum(correct_buf) * 100.0 / test_dataset.__len__()
         print("Epoch %d: Test loss: %.4f, Accuracy: %.2f" % (epoch, np.mean(loss_buf), acc))
+        if acc > best_acc:
+            best_acc = acc
+            torch.save(classifier.state_dict(), '%s/cls_model_best.pth' % opt.outf)
 
 total_correct = 0
 total_testset = 0
