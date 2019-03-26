@@ -130,7 +130,7 @@ for epoch in range(opt.nepoch):
         iou_buf = []
         for i, data in enumerate(testdataloader, 0):
             points, target = data
-            points, target = Variable(points), Variable(target[:, 0])
+            points, target = Variable(points), Variable(target)
             points = points.transpose(2, 1)
             points, target = points.cuda(), target.cuda()
             pred, _, _ = classifier(points)
