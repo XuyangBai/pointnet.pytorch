@@ -150,7 +150,7 @@ for epoch in range(opt.nepoch):
             loss_buf.append(loss.data.item())
             correct_buf.append(correct.item())
         # print('i:%d  loss: %f accuracy: %f' % (i, loss.data.item(), correct / float(32)))
-        acc = np.sum(correct_buf) * 100 / test_dataset.__len__() / opt.batchSize / 2500
+        acc = np.sum(correct_buf) * 100 / test_dataset.__len__() / 2500
         print("Epoch %d: Test loss: %.4f Accuracy: %.2f%% IOU: %.2f%%" % (
             epoch, np.mean(loss_buf), acc, np.mean(iou_buf) * 100.0))
         if np.mean(iou_buf) > best_iou:
