@@ -121,7 +121,7 @@ for epoch in range(opt.nepoch):
         #     epoch, i, num_batch, loss.item(), correct.item() / float(opt.batchSize)))
 
     # finish one epoch
-    print('Epoch %d: Train loss: %.2f, Time: %.2f s' % (epoch, np.mean(loss_buf), time.time() - epoch_start_time))
+    print('Epoch %d: Train loss: %.4f, Time: %.2f s' % (epoch, np.mean(loss_buf), time.time() - epoch_start_time))
     # every ten epoch: save model & evaluate
     if (1 + epoch) % 10 == 0:
         torch.save(classifier.state_dict(), '%s/cls_model_%d.pth' % (opt.outf, epoch))
@@ -141,8 +141,8 @@ for epoch in range(opt.nepoch):
             loss_buf.append(loss.data.item())
             correct_buf.append(correct.item())
         # print('i:%d  loss: %f accuracy: %f' % (i, loss.data.item(), correct / float(32)))
-        acc = np.sum(correct_buf) * 100 / test_dataset.__len__()
-        print("Epoch %d: Test loss: %.2f, Accuracy: %.2f" % (epoch, np.mean(loss_buf), acc))
+        acc = np.sum(correct_buf) * 100.0 / test_dataset.__len__()
+        print("Epoch %d: Test loss: %.4f, Accuracy: %.2f" % (epoch, np.mean(loss_buf), acc))
 
 total_correct = 0
 total_testset = 0
