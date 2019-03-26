@@ -7,7 +7,7 @@ import numpy as np
 import sys
 from tqdm import tqdm 
 import json
-from plyfile import PlyData, PlyElement
+# from plyfile import PlyData, PlyElement
 
 def get_segmentation_classes(root):
     catfile = os.path.join(root, 'synsetoffset2category.txt')
@@ -167,25 +167,25 @@ class ModelNetDataset(data.Dataset):
     def __getitem__(self, index):
         fn = self.fns[index]
         cls = self.cat[fn.split('/')[0]]
-        with open(os.path.join(self.root, fn), 'rb') as f:
-            plydata = PlyData.read(f)
-        pts = np.vstack([plydata['vertex']['x'], plydata['vertex']['y'], plydata['vertex']['z']]).T
-        choice = np.random.choice(len(pts), self.npoints, replace=True)
-        point_set = pts[choice, :]
-
-        point_set = point_set - np.expand_dims(np.mean(point_set, axis=0), 0)  # center
-        dist = np.max(np.sqrt(np.sum(point_set ** 2, axis=1)), 0)
-        point_set = point_set / dist  # scale
-
-        if self.data_augmentation:
-            theta = np.random.uniform(0, np.pi * 2)
-            rotation_matrix = np.array([[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]])
-            point_set[:, [0, 2]] = point_set[:, [0, 2]].dot(rotation_matrix)  # random rotation
-            point_set += np.random.normal(0, 0.02, size=point_set.shape)  # random jitter
-
-        point_set = torch.from_numpy(point_set.astype(np.float32))
-        cls = torch.from_numpy(np.array([cls]).astype(np.int64))
-        return point_set, cls
+        # with open(os.path.join(self.root, fn), 'rb') as f:
+        #     plydata = PlyData.read(f)
+        # pts = np.vstack([plydata['vertex']['x'], plydata['vertex']['y'], plydata['vertex']['z']]).T
+        # choice = np.random.choice(len(pts), self.npoints, replace=True)
+        # point_set = pts[choice, :]
+        #
+        # point_set = point_set - np.expand_dims(np.mean(point_set, axis=0), 0)  # center
+        # dist = np.max(np.sqrt(np.sum(point_set ** 2, axis=1)), 0)
+        # point_set = point_set / dist  # scale
+        #
+        # if self.data_augmentation:
+        #     theta = np.random.uniform(0, np.pi * 2)
+        #     rotation_matrix = np.array([[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]])
+        #     point_set[:, [0, 2]] = point_set[:, [0, 2]].dot(rotation_matrix)  # random rotation
+        #     point_set += np.random.normal(0, 0.02, size=point_set.shape)  # random jitter
+        #
+        # point_set = torch.from_numpy(point_set.astype(np.float32))
+        # cls = torch.from_numpy(np.array([cls]).astype(np.int64))
+        # return point_set, cls
 
 
     def __len__(self):

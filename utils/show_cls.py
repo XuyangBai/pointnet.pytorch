@@ -7,15 +7,14 @@ from torch.autograd import Variable
 from pointnet.dataset import ShapeNetDataset
 from pointnet.model import PointNetCls
 import torch.nn.functional as F
+import numpy as np
 
-
-#showpoints(np.random.randn(2500,3), c1 = np.random.uniform(0,1,size = (2500)))
+# showpoints(np.random.randn(2500,3), c1 = np.random.uniform(0,1,size = (2500)))
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--model', type=str, default = '',  help='model path')
+parser.add_argument('--model', type=str, default='', help='model path')
 parser.add_argument('--num_points', type=int, default=2500, help='input batch size')
-
 
 opt = parser.parse_args()
 print(opt)
@@ -35,7 +34,8 @@ classifier.cuda()
 classifier.load_state_dict(torch.load(opt.model))
 classifier.eval()
 
-
+loss_buf = []
+correct_buf = []
 for i, data in enumerate(testdataloader, 0):
     points, target = data
     points, target = Variable(points), Variable(target[:, 0])
@@ -46,4 +46,8 @@ for i, data in enumerate(testdataloader, 0):
 
     pred_choice = pred.data.max(1)[1]
     correct = pred_choice.eq(target.data).cpu().sum()
-    print('i:%d  loss: %f accuracy: %f' % (i, loss.data.item(), correct / float(32)))
+    loss_buf.append(loss.data.item())
+    correct_buf.append(correct)
+    # print('i:%d  loss: %f accuracy: %f' % (i, loss.data.item(), correct / float(32)))
+print("Loss:", np.mean(loss_buf))
+print("Accuracy:", np.sum(correct_buf) / test_dataset.__len__())
