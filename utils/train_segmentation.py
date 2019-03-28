@@ -123,7 +123,7 @@ for epoch in range(opt.nepoch):
     print('Epoch %d: Train loss: %.2f, Time: %.2f s' % (epoch, np.mean(loss_buf), time.time() - epoch_start_time))
     # every ten epoch: save model & evaluate
 
-    if (epoch) % 10 == 0:
+    if (epoch + 1) % 10 == 0:
         torch.save(classifier.state_dict(), '%s/seg_model_%s_%d.pth' % (opt.outf, opt.class_choice, epoch + 1))
         # evaluate on test set
         loss_buf = []
